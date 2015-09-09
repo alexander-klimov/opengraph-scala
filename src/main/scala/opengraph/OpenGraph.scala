@@ -1,7 +1,7 @@
 package opengraph
 
 import dispatch.{Http, url}
-import model.{Basic, OpenGraphElement, OpenGraphRequest}
+import model.{OpenGraphKeys, Basic, OpenGraphElement, OpenGraphRequest}
 import org.jsoup.Jsoup
 
 import scala.util.{Failure, Success}
@@ -36,10 +36,10 @@ object OpenGraph {
 
     Maybe.fromOption {
       for {
-        title <- propertyMap.get("og:title")
-        ogType <- propertyMap.get("og:type")
-        url <- propertyMap.get("og:url")
-        image <- propertyMap.get("og:image")
+        title <- propertyMap.get(OpenGraphKeys.ogTitle)
+        ogType <- propertyMap.get(OpenGraphKeys.ogType)
+        url <- propertyMap.get(OpenGraphKeys.ogUrl)
+        image <- propertyMap.get(OpenGraphKeys.ogImage)
     } yield Basic(title, ogType, url, image)}
   }
 
