@@ -39,11 +39,11 @@ object OpenGraph {
 
     Maybe.fromOption{
       for {
-      title <- propertyMap.get("og:title")
-      t <- propertyMap.get("og:type")
-      url <- propertyMap.get("og:url")
-      image <- propertyMap.get("og:image")
-    } yield Basic(title, t, url, image)}
+        title <- propertyMap.get("og:title")
+        ogType <- propertyMap.get("og:type")
+        url <- propertyMap.get("og:url")
+        image <- propertyMap.get("og:image")
+    } yield Basic(title, ogType, url, image)}
   }
 
 }
