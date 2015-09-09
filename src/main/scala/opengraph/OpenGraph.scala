@@ -5,10 +5,9 @@ import model.{Basic, OpenGraphElement, OpenGraphRequest}
 import org.jsoup.Jsoup
 
 import scala.util.{Failure, Success}
-import scalaz.{\/-, -\/, Maybe}
 import scalaz.concurrent.Task
+import scalaz.{-\/, Maybe, \/-}
 import scala.collection.JavaConversions._
-
 
 object OpenGraph {
 
@@ -20,11 +19,9 @@ object OpenGraph {
     Task.async { completeWithEither =>
       Http.apply(url(request.url)).onComplete {
         case Success(response) => completeWithEither(\/-(fromBody(response.getResponseBody)))
-        case Failure(exception) => completeWithEither(-\/(exception))
-      }
-    }
+        case Failure(exception) => completeWithEither(-\/(exception))}}
 
-  def fromBody(body: String): Maybe[OpenGraphElement]= {
+  def fromBody(body: String): Maybe[OpenGraphElement] = {
     val propertyMap = Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, String]) { (m, element) =>
       val maybeProperty = Option(element.attr("property"))
       val maybeContent = Option(element.attr("content"))
@@ -37,7 +34,7 @@ object OpenGraph {
       entry.fold(m) { case (k, v) => m + (k -> v)}
     }
 
-    Maybe.fromOption{
+    Maybe.fromOption {
       for {
         title <- propertyMap.get("og:title")
         ogType <- propertyMap.get("og:type")
