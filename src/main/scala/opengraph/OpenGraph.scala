@@ -13,7 +13,7 @@ import scalaz._
 import Scalaz._
 
 object OpenGraph {
-  
+
   def getUnsafe(request: OpenGraphRequest)(implicit executionContext: ExecutionContext): Maybe[OpenGraphElement] =
     getTask(request).run
 
