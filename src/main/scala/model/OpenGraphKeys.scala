@@ -2,11 +2,13 @@ package model
 
 object OpenGraphKeys {
 
-  //Basic Metadata Keys
-  val ogTitle: String = "og:title"
-  val ogType: String = "og:type"
-  val ogUrl: String = "og:url"
-  val ogImage: String = "og:image"
+  object basic {
+    //Basic Metadata Keys
+    val ogTitle: String = "og:title"
+    val ogType: String = "og:type"
+    val ogUrl: String = "og:url"
+    val ogImage: String = "og:image"
+  }
 
   object metadata {
     //Optional Metadata Keys

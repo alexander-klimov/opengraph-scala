@@ -44,10 +44,10 @@ object OpenGraph {
   def basicFromPropertyMap(propertyMap: Map[String, List[String]]): Maybe[OpenGraphElement] =
     Maybe.fromOption {
       for {
-        title <- propertyMap.get(OpenGraphKeys.ogTitle).map(_.mkString)
-        ogType <- propertyMap.get(OpenGraphKeys.ogType).map(_.mkString)
-        url <- propertyMap.get(OpenGraphKeys.ogUrl).map(_.mkString)
-        image <- propertyMap.get(OpenGraphKeys.ogImage).map(_.mkString)
+        title <- propertyMap.get(OpenGraphKeys.basic.ogTitle).map(_.mkString)
+        ogType <- propertyMap.get(OpenGraphKeys.basic.ogType).map(_.mkString)
+        url <- propertyMap.get(OpenGraphKeys.basic.ogUrl).map(_.mkString)
+        image <- propertyMap.get(OpenGraphKeys.basic.ogImage).map(_.mkString)
     } yield Basic(title, ogType, url, image)}
 
   def metaDataFromPropertyMap(propertyMap: Map[String, List[String]]): Maybe[MetaData] =
