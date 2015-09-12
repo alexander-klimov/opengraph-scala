@@ -20,11 +20,14 @@ object OpenGraph {
   def getTask(request: OpenGraphRequest): Task[Maybe[OpenGraphElement]] =
     Task.async { completeWithEither =>
       Http.apply(url(request.url)).onComplete {
-        case Success(response) => completeWithEither(\/-(fromBody(response.getResponseBody)))
-        case Failure(exception) => completeWithEither(-\/(exception))}}
+        case Success(response) =>
+          val propertyMap = propertyMapFromBody(response.getResponseBody)
+          completeWithEither(\/-(basicFromPropertyMap(propertyMap)))
+        case Failure(exception) =>
+          completeWithEither(-\/(exception))}}
 
-  def fromBody(body: String): Maybe[OpenGraphElement] = {
-    val propertyMap: Map[String, List[String]] = Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, List[String]]) { (m, element) =>
+  def propertyMapFromBody(body: String): Map[String, List[String]] = {
+    Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, List[String]]) { (m, element) =>
       val maybeProperty = Option(element.attr("property"))
       val maybeContent = Option(element.attr("content"))
       val entry =
@@ -34,9 +37,11 @@ object OpenGraph {
         } yield (property, content)
 
       //Use semigroup append here with Map[String, List[_]] to not loose data (Eg. og:locale:alternate)
-      entry.fold(m) { case (k, v) => m |+| Map(k -> List(v))}
+      entry.fold(m) { case (k, v) => m |+| Map(k -> List(v)) }
     }
+  }
 
+  def basicFromPropertyMap(propertyMap: Map[String, List[String]]): Maybe[OpenGraphElement] =
     Maybe.fromOption {
       for {
         title <- propertyMap.get(OpenGraphKeys.ogTitle).map(_.mkString)
@@ -44,6 +49,5 @@ object OpenGraph {
         url <- propertyMap.get(OpenGraphKeys.ogUrl).map(_.mkString)
         image <- propertyMap.get(OpenGraphKeys.ogImage).map(_.mkString)
     } yield Basic(title, ogType, url, image)}
-  }
 
 }
