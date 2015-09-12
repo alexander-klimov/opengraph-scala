@@ -22,7 +22,7 @@ object OpenGraph {
         case Failure(exception) => completeWithEither(-\/(exception))}}
 
   def fromBody(body: String): Maybe[OpenGraphElement] = {
-    val propertyMap = Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, String]) { (m, element) =>
+    val propertyMap: Map[String, String] = Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, String]) { (m, element) =>
       val maybeProperty = Option(element.attr("property"))
       val maybeContent = Option(element.attr("content"))
       val entry =
