@@ -4,6 +4,7 @@ import dispatch.{Http, url}
 import model._
 import org.jsoup.Jsoup
 
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 import scalaz.concurrent.Task
 import scalaz.{-\/, Maybe, \/-}
@@ -12,12 +13,11 @@ import scalaz._
 import Scalaz._
 
 object OpenGraph {
+  
+  def getUnsafe(request: OpenGraphRequest)(implicit executionContext: ExecutionContext): Maybe[OpenGraphElement] =
+    getTask(request).run
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-
-  def getUnsafe(request: OpenGraphRequest): Maybe[OpenGraphElement] = getTask(request).run
-
-  def getTask(request: OpenGraphRequest): Task[Maybe[OpenGraphElement]] =
+  def getTask(request: OpenGraphRequest)(implicit executionContext: ExecutionContext): Task[Maybe[OpenGraphElement]] =
     Task.async { completeWithEither =>
       Http.apply(url(request.url)).onComplete {
         case Success(response) =>
