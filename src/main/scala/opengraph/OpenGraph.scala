@@ -8,6 +8,8 @@ import scala.util.{Failure, Success}
 import scalaz.concurrent.Task
 import scalaz.{-\/, Maybe, \/-}
 import scala.collection.JavaConversions._
+import scalaz._
+import Scalaz._
 
 object OpenGraph {
 
@@ -22,7 +24,7 @@ object OpenGraph {
         case Failure(exception) => completeWithEither(-\/(exception))}}
 
   def fromBody(body: String): Maybe[OpenGraphElement] = {
-    val propertyMap: Map[String, String] = Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, String]) { (m, element) =>
+    val propertyMap: Map[String, List[String]] = Jsoup.parse(body).getElementsByTag("meta").iterator().toList.foldLeft(Map.empty[String, List[String]]) { (m, element) =>
       val maybeProperty = Option(element.attr("property"))
       val maybeContent = Option(element.attr("content"))
       val entry =
@@ -31,15 +33,15 @@ object OpenGraph {
           content <- maybeContent
         } yield (property, content)
 
-      entry.fold(m) { case (k, v) => m + (k -> v)}
+      entry.fold(m) { case (k, v) => m |+| Map(k -> List(v))}
     }
 
     Maybe.fromOption {
       for {
-        title <- propertyMap.get(OpenGraphKeys.ogTitle)
-        ogType <- propertyMap.get(OpenGraphKeys.ogType)
-        url <- propertyMap.get(OpenGraphKeys.ogUrl)
-        image <- propertyMap.get(OpenGraphKeys.ogImage)
+        title <- propertyMap.get(OpenGraphKeys.ogTitle).map(_.mkString)
+        ogType <- propertyMap.get(OpenGraphKeys.ogType).map(_.mkString)
+        url <- propertyMap.get(OpenGraphKeys.ogUrl).map(_.mkString)
+        image <- propertyMap.get(OpenGraphKeys.ogImage).map(_.mkString)
     } yield Basic(title, ogType, url, image)}
   }
 
