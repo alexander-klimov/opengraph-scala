@@ -53,12 +53,12 @@ object OpenGraph {
   def metaDataFromPropertyMap(propertyMap: Map[String, List[String]]): Maybe[MetaData] =
     Maybe.fromOption {
       for {
-        ogAudio <- propertyMap.get(OpenGraphKeys.ogAudio).map(_.mkString)
-        ogDescription <- propertyMap.get(OpenGraphKeys.ogDescription).map(_.mkString)
-        ogDeterminer <- propertyMap.get(OpenGraphKeys.ogDeterminer).map(_.mkString)
-        ogLocale <- propertyMap.get(OpenGraphKeys.ogLocale).map(_.mkString)
-        ogLocaleAlternate <- propertyMap.get(OpenGraphKeys.ogLocaleAlternate)
-        ogSiteName <- propertyMap.get(OpenGraphKeys.ogSiteName).map(_.mkString)
-        ogVideo <- propertyMap.get(OpenGraphKeys.ogVideo).map(_.mkString)
+        ogAudio <- propertyMap.get(OpenGraphKeys.metadata.ogAudio).map(_.mkString)
+        ogDescription <- propertyMap.get(OpenGraphKeys.metadata.ogDescription).map(_.mkString)
+        ogDeterminer <- propertyMap.get(OpenGraphKeys.metadata.ogDeterminer).map(_.mkString)
+        ogLocale <- propertyMap.get(OpenGraphKeys.metadata.ogLocale).map(_.mkString)
+        ogLocaleAlternate <- propertyMap.get(OpenGraphKeys.metadata.ogLocaleAlternate)
+        ogSiteName <- propertyMap.get(OpenGraphKeys.metadata.ogSiteName).map(_.mkString)
+        ogVideo <- propertyMap.get(OpenGraphKeys.metadata.ogVideo).map(_.mkString)
       } yield MetaData(ogAudio, ogDescription, ogDeterminer, ogLocale, ogLocaleAlternate, ogSiteName, ogVideo)}
 }
