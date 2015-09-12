@@ -33,6 +33,7 @@ object OpenGraph {
           content <- maybeContent
         } yield (property, content)
 
+      //Use semigroup append here with Map[String, List[_]] to not loose data (Eg. og:locale:alternate)
       entry.fold(m) { case (k, v) => m |+| Map(k -> List(v))}
     }
 
