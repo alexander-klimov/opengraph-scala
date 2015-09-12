@@ -13,7 +13,7 @@ object OpenGraphKeys {
   val ogDescription: String = "og:description"
   val ogDeterminer: String = "og:determiner"
   val ogLocale: String = "og:locale"
-  val ogLocaleAlternative: String = "og:locale:alternate"
+  val ogLocaleAlternate: String = "og:locale:alternate"
   val ogSiteName: String = "og:site_name"
   val ogVideo: String = "og:video"
 }
