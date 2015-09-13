@@ -48,7 +48,7 @@ object OpenGraph {
         ogType <- propertyMap.get(OpenGraphKeys.basic.ogType).map(_.mkString)
         url <- propertyMap.get(OpenGraphKeys.basic.ogUrl).map(_.mkString)
         image <- propertyMap.get(OpenGraphKeys.basic.ogImage).map(_.mkString)
-    } yield Basic(title, ogType, url, image)}
+    } yield Basic(title, ogType, image, url)}
 
   def metaDataFromPropertyMap(propertyMap: Map[String, List[String]]): Maybe[MetaData] =
     Maybe.fromOption {
